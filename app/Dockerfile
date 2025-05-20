@@ -5,13 +5,13 @@ FROM php:8.2-apache
 RUN apt-get update && \
     apt-get install -y --no-install-recommends default-mysql-client dos2unix vim-tiny
 
-# ImageMagick is required for some RSVC features (e.g. C.3.24.1700)
-# We use this tool to install it because of the "no installation candidate" error mentioned here: https://hub.docker.com/_/php
+# Use this utility to install php extensions, since docker-php-ext-install doesn't support them all.
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
-RUN install-php-extensions imagick
 
-# Install PHP extensions.  This is key because REDCap uses MySQLi
-RUN docker-php-ext-install -j$(nproc) mysqli
+# MySQLi is required for REDCap
+# ImageMagick is required for some RSVC features (e.g. C.3.24.1700).  We use this tool to install it because of the "no installation candidate" error mentioned here: https://hub.docker.com/_/php
+# Zip extension is currently used to download composer packages during cloud builds (faster than using git), but we might also use it in some actual tests down the road.
+RUN install-php-extensions mysqli imagick zip
 
 # Install xDebug
 RUN pecl install xdebug && \
