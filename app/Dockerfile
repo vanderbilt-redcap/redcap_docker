@@ -3,7 +3,12 @@ FROM php:8.2-apache
 
 # Install system dependencies. We want MySQL CLI so we can communicate with container on socket via Docker from outside.
 RUN apt-get update && \
-    apt-get install -y git default-mysql-client dos2unix
+    apt-get install -y --no-install-recommends default-mysql-client dos2unix vim-tiny
+
+# ImageMagick is required for some RSVC features (e.g. C.3.24.1700)
+# We use this tool to install it because of the "no installation candidate" error mentioned here: https://hub.docker.com/_/php
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+RUN install-php-extensions imagick
 
 # Install PHP extensions.  This is key because REDCap uses MySQLi
 RUN docker-php-ext-install -j$(nproc) mysqli
