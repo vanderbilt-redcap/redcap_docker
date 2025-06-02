@@ -6,7 +6,9 @@ services:
     ports:
       - '8080:80'
     environment:
-      - REDCAP_VERSION=${REDCAP_VERSION}
+      PHP_EXTENSION_IMAGICK: 1
+      PHP_EXTENSION_XDEBUG: 1
+
     depends_on:
       - db
     # If you need to make on the fly modifications to the redcap_source dir, uncommenting the following may be helpful.
