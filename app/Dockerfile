@@ -13,12 +13,13 @@ RUN echo mailhub=mailhog:1025 >> /etc/ssmtp/ssmtp.conf
 RUN curl -Lsf https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Configure xDebug
-RUN echo "xdebug.mode=coverage" >> /usr/local/etc/php/php.ini && \
-    echo "xdebug.coverage_enable=1" >> /usr/local/etc/php/php.ini && \
-    echo "xdebug.coverage_output_dir=/var/www/html/coverage/" >> /usr/local/etc/php/php.ini && \
-    echo "memory_limit=512M" >> /usr/local/etc/php/php.ini && \
-    echo "auto_prepend_file	=/var/www/html/save-code-coverage.php" >> /usr/local/etc/php/php.ini && \
-    echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/php.ini
+ARG PHP_INI_PATH="/usr/lib/php/8.2/php.ini-production"
+RUN echo "xdebug.mode=coverage" >> ${PHP_INI_PATH} && \
+    echo "xdebug.coverage_enable=1" >> ${PHP_INI_PATH} && \
+    echo "xdebug.coverage_output_dir=/var/www/html/coverage/" >> ${PHP_INI_PATH} && \
+    echo "memory_limit=512M" >> ${PHP_INI_PATH} && \
+    echo "auto_prepend_file	=/var/www/html/save-code-coverage.php" >> ${PHP_INI_PATH} && \
+    echo "xdebug.client_host=host.docker.internal" >> ${PHP_INI_PATH}
 
 # Make the default shell work better
 RUN ln -sf /bin/bash /bin/sh
