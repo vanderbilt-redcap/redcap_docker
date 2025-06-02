@@ -9,6 +9,9 @@ RUN apt-get update && \
 # Configure sSMTP to send to Mailhog
 RUN echo mailhub=mailhog:1025 >> /etc/ssmtp/ssmtp.conf
 
+# Make the default shell work better
+RUN ln -sf /bin/bash /bin/sh
+
 # Set up the entrypoint
 COPY ./docker-entrypoint.sh /docker-entrypoint.sh
 RUN dos2unix /docker-entrypoint.sh # Required when running on Windows with autocrlf enabled
