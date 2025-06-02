@@ -21,6 +21,9 @@ RUN echo "xdebug.mode=coverage" >> ${PHP_INI_PATH} && \
     echo "auto_prepend_file	=/var/www/html/save-code-coverage.php" >> ${PHP_INI_PATH} && \
     echo "xdebug.client_host=host.docker.internal" >> ${PHP_INI_PATH}
 
+    # Make vim-tiny behave more like vim
+RUN echo -e "set backspace=indent,eol,start\nset nocompatible" >> /root/.vimrc
+
 # Make the default shell work better
 RUN ln -sf /bin/bash /bin/sh
 
