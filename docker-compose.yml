@@ -8,6 +8,7 @@ services:
     environment:
       PHP_EXTENSION_IMAGICK: 1
       PHP_EXTENSION_XDEBUG: 1
+      TEMPLATE_PHP_INI: production
 
     depends_on:
       - db

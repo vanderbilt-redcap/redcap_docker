@@ -20,6 +20,9 @@ RUN echo "xdebug.mode=coverage" >> /usr/local/etc/php/php.ini && \
     echo "auto_prepend_file	=/var/www/html/save-code-coverage.php" >> /usr/local/etc/php/php.ini && \
     echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/php.ini
 
+# Make the default shell work better
+RUN ln -sf /bin/bash /bin/sh
+
 # Set up the entrypoint
 COPY ./docker-entrypoint.sh /docker-entrypoint.sh
 RUN dos2unix /docker-entrypoint.sh # Required when running on Windows with autocrlf enabled
