@@ -9,6 +9,7 @@ services:
       PHP_EXTENSION_IMAGICK: 1
       PHP_EXTENSION_XDEBUG: 1
       TEMPLATE_PHP_INI: production
+      REDCAP_VERSION: ${REDCAP_VERSION}
 
     depends_on:
       - db
