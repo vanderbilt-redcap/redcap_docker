@@ -5,6 +5,8 @@ services:
     build: app
     ports:
       - '8080:80'
+    environment:
+      PHP_EXTENSION_IMAGICK: 1
 
     depends_on:
       - db
