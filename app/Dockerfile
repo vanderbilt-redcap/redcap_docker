@@ -12,8 +12,11 @@ RUN echo mailhub=mailhog:1025 >> /etc/ssmtp/ssmtp.conf
 # Download and install Composer
 RUN curl -Lsf https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# php.ini changes - We overwrite generated_conf.ini because all it contains are some xdebug lines we want to replace anyway.
-ARG PHP_INI_PATH="/etc/php/8.2/mods-available/generated_conf.ini"
+# Disable thecodingmachine's default xdebug config so it doesn't override ours
+RUN sed -i 's/ echo "xdebug/ \/\/echo "xdebug/g' /usr/local/bin/generate_conf.php
+
+# php.ini changes
+ARG PHP_INI_PATH="/usr/lib/php/8.2/php.ini-production"
 RUN echo "post_max_size = 100M" >> ${PHP_INI_PATH} && \
     echo "upload_max_filesize = 100M" >> ${PHP_INI_PATH} && \
     echo "xdebug.mode=coverage" >> ${PHP_INI_PATH} && \
