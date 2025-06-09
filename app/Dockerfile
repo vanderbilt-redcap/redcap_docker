@@ -1,27 +1,24 @@
 # Use an official PHP image with Apache as the base image.
-FROM php:8.2-apache
+FROM thecodingmachine/php:8.2.28-v4-apache
+USER root
 
 # Install system dependencies. We want MySQL CLI so we can communicate with container on socket via Docker from outside.
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends default-mysql-client dos2unix vim-tiny
+    apt-get install -y --no-install-recommends default-mysql-client dos2unix vim-tiny ssmtp
 
-# Use this utility to install php extensions, since docker-php-ext-install doesn't support them all.
-COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+# Configure sSMTP to send to Mailhog
+RUN echo mailhub=mailhog:1025 >> /etc/ssmtp/ssmtp.conf
 
-# MySQLi is required for REDCap
-# ImageMagick is required for some RSVC features (e.g. C.3.24.1700).  We use this tool to install it because of the "no installation candidate" error mentioned here: https://hub.docker.com/_/php
-# Zip extension is currently used to download composer packages during cloud builds (faster than using git), but we might also use it in some actual tests down the road.
-RUN install-php-extensions mysqli imagick zip
+# php.ini changes
+ARG PHP_INI_PATH="/usr/lib/php/8.2/php.ini-production"
+RUN echo "post_max_size = 100M" >> ${PHP_INI_PATH} && \
+    echo "upload_max_filesize = 100M" >> ${PHP_INI_PATH} && \
 
-# Configure Mailhog
-RUN curl -Lsf 'https://storage.googleapis.com/golang/go1.19.4.linux-amd64.tar.gz' | tar -C '/usr/local' -xvzf -
-ENV PATH /usr/local/go/bin:$PATH
-RUN go install github.com/mailhog/mhsendmail@v0.2.0
-RUN cp /root/go/bin/mhsendmail /usr/bin/mhsendmail
+# Make vim-tiny behave more like vim
+RUN echo -e "set backspace=indent,eol,start\nset nocompatible" >> /root/.vimrc
 
-# Copy a php.ini and set the Mailhog path
-COPY php.ini /usr/local/etc/php
-RUN echo "sendmail_path = '/usr/bin/mhsendmail --smtp-addr=mailhog:1025'" >> /usr/local/etc/php/php.ini
+# Make the default shell work better
+RUN ln -sf /bin/bash /bin/sh
 
 # Set up the entrypoint
 COPY ./docker-entrypoint.sh /docker-entrypoint.sh

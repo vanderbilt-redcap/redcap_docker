@@ -5,6 +5,9 @@ services:
     build: app
     ports:
       - '8080:80'
+    environment:
+      PHP_EXTENSION_IMAGICK: 1
+      TEMPLATE_PHP_INI: production
 
     depends_on:
       - db
