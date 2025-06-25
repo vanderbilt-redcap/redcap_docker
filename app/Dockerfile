@@ -12,7 +12,7 @@ RUN echo mailhub=mailhog:1025 >> /etc/ssmtp/ssmtp.conf
 # php.ini changes
 ARG PHP_INI_PATH="/usr/lib/php/8.2/php.ini-production"
 RUN echo "post_max_size = 100M" >> ${PHP_INI_PATH} && \
-    echo "upload_max_filesize = 100M" >> ${PHP_INI_PATH} && \
+    echo "upload_max_filesize = 100M" >> ${PHP_INI_PATH}
 
 # Make vim-tiny behave more like vim
 RUN echo -e "set backspace=indent,eol,start\nset nocompatible" >> /root/.vimrc
