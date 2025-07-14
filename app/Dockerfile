@@ -22,6 +22,7 @@ RUN ln -sf /bin/bash /bin/sh
 
 # Set up the entrypoint
 COPY ./docker-entrypoint.sh /docker-entrypoint.sh
+COPY ./create-azure-container.php /var/www/html/create-azure-container.php
 RUN dos2unix /docker-entrypoint.sh # Required when running on Windows with autocrlf enabled
 RUN chmod +x /docker-entrypoint.sh
 
