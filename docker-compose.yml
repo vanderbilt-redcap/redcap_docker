@@ -47,7 +47,6 @@ services:
     container_name: devstoreaccount1.blob.core.windows.net
     image: mcr.microsoft.com/azure-storage/azurite
     volumes:
-      - ../redcap_cypress/cypress/azure_uploads:/data/__blobstorage__
       - ./certs:/certs
     depends_on:
       - app
