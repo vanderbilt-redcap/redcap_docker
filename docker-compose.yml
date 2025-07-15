@@ -52,7 +52,7 @@ services:
       - app
     command: |
       sh -c "
-        sleep 10 && wget -O - redcap_docker-app-1/create-azure-container.php &
+        sleep 10 && wget -O - redcap_docker-app-1/azure/create-container.php &
         azurite --inMemoryPersistence --blobHost 0.0.0.0 --blobPort 443 --cert /certs/devstoreaccount1.blob.core.windows.net.crt --key /certs/devstoreaccount1.blob.core.windows.net.key
       "
   
