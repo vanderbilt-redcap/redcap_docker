@@ -53,7 +53,7 @@ services:
     command: |
       sh -c "
         sleep 10 && wget -O - redcap_docker-app-1/create-azure-container.php &
-        azurite -l /data --blobHost 0.0.0.0 --blobPort 443 --cert /certs/devstoreaccount1.blob.core.windows.net.crt --key /certs/devstoreaccount1.blob.core.windows.net.key
+        azurite --inMemoryPersistence --blobHost 0.0.0.0 --blobPort 443 --cert /certs/devstoreaccount1.blob.core.windows.net.crt --key /certs/devstoreaccount1.blob.core.windows.net.key
       "
   
   webdav:
