@@ -73,8 +73,15 @@ services:
       - ../redcap_cypress/cypress/gcs_uploads:/data
 
   minio:
-    container_name: redcap_docker-minio-1
+    # We use this hostname because minio doesn't support "redcap_docker-minio-1" as a hostname
+    container_name: mybucket.minio.local
     image: minio/minio
-    volumes:
-      - ../redcap_cypress/cypress/s3_uploads:/data
-    command: server /data --console-address ":9001"
+    environment:
+      MINIO_DOMAIN: minio.local
+    entrypoint: |
+      /bin/sh -c "
+        sleep 10 && \
+        mc mb /data/mybucket \
+        mc alias set local http://localhost:9000 minioadmin minioadmin &
+        minio server /data --console-address ":9001"
+      "
