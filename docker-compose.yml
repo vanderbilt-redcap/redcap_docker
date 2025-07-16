@@ -38,6 +38,7 @@ services:
   sftp:
     container_name: redcap_docker-sftp-1
     image: atmoz/sftp
+    profiles: ["sftp"]
     volumes:
       - ../redcap_cypress/cypress/sftp_uploads:/home/sftp-user/upload
     command: sftp-user:sftp-password
