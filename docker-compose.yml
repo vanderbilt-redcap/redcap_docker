@@ -85,8 +85,8 @@ services:
       MINIO_DOMAIN: minio.local
     entrypoint: |
       /bin/sh -c "
-        sleep 10 && \
-        mc mb /data/mybucket \
+        sleep 10 && \ 
+        mc mb /data/mybucket && \
         mc alias set local http://localhost:9000 minioadmin minioadmin &
         minio server /data --console-address ":9001"
       "
