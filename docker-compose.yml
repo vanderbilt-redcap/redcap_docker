@@ -74,7 +74,12 @@ services:
     image: fsouza/fake-gcs-server
     profiles: ["external-storage"]
     volumes:
-      - ../redcap_cypress/cypress/gcs_uploads:/data
+      - ../redcap_cypress/cypress/gcs_uploads:/storage
+    entrypoint: |
+      /bin/sh -c "
+        mkdir /storage/mybucket
+        fake-gcs-server -scheme http -port 80
+      "
 
   minio:
     # We use this hostname because minio doesn't support "redcap_docker-minio-1" as a hostname
