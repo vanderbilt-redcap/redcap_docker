@@ -38,3 +38,10 @@ services:
     ports:
       - "1025:1025"
       - "8025:8025"
+
+  sftp:
+    container_name: redcap_docker-sftp-1
+    image: atmoz/sftp
+    volumes:
+        - ../redcap_cypress/cypress/sftp_uploads:/home/sftp-user/upload
+    command: sftp-user:sftp-password
