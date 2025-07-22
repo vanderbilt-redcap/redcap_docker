@@ -16,6 +16,7 @@ services:
     volumes:
       - ../tmp/:/var/www/html/temp:Z
       - ../edocs/:/var/www/html/edocs:Z
+      - ./app/azure:/var/www/html/azure:Z
       # If you need to make on the fly modifications to the redcap_source dir, uncommenting the following may be helpful.
       # However, there will be a significant performance hit (especially on Windows).
       # Hacking run.sh to copy redcap_source to the container on every run may be faster for you.
