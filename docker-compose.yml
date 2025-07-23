@@ -78,7 +78,6 @@ services:
     container_name: redcap_docker-fake-gcs-server-1
     image: fsouza/fake-gcs-server
     profiles: ["external-storage"]
-    user: "${UID:-}" # The user ID is required on POSIX since fake-gcs-server stores files only accessible by root by default.
     volumes:
       - ../redcap_cypress/cypress/gcs_uploads:/storage
     entrypoint: |
