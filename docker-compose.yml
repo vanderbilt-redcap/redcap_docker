@@ -45,7 +45,7 @@ services:
     image: atmoz/sftp
     profiles: ["sftp"]
     volumes:
-      - ../redcap_cypress/cypress/sftp_uploads:/home/sftp-user/upload:Z
+      - ../redcap_cypress/cypress/sftp_uploads:/home/sftp-user/upload
     command: sftp-user:sftp-password
 
   azurite:
@@ -54,7 +54,7 @@ services:
     image: mcr.microsoft.com/azure-storage/azurite
     profiles: ["external-storage"]
     volumes:
-      - ./certs:/certs:Z
+      - ./certs:/certs
     depends_on:
       - app
     command: |
@@ -68,7 +68,7 @@ services:
     image: bytemark/webdav
     profiles: ["external-storage"]
     volumes:
-      - ../redcap_cypress/cypress/webdav_uploads:/var/lib/dav:Z
+      - ../redcap_cypress/cypress/webdav_uploads:/var/lib/dav
     environment:
       AUTH_TYPE: Basic
       USERNAME: webdav-user
@@ -79,7 +79,7 @@ services:
     image: fsouza/fake-gcs-server
     profiles: ["external-storage"]
     volumes:
-      - ../redcap_cypress/cypress/gcs_uploads:/storage:Z
+      - ../redcap_cypress/cypress/gcs_uploads:/storage
     entrypoint: |
       /bin/sh -c "
         mkdir /storage/mybucket
