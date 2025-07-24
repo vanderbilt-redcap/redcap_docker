@@ -46,7 +46,7 @@ services:
     profiles: ["sftp"]
     volumes:
       - ./external_storage/sftp:/home/sftp-user/upload
-    command: sftp-user:sftp-password
+    command: sftp-user:sftp-password:${UID:-}
 
   azurite:
     # We spoof this domain because REDCap requires azure URLs to end in blob.core.windows.net
