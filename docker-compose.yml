@@ -8,16 +8,16 @@ services:
     environment:
       PHP_EXTENSION_IMAGICK: 1
       TEMPLATE_PHP_INI: production
-
     depends_on:
       - db
-    # If you need to make on the fly modifications to the redcap_source dir, uncommenting the following may be helpful.
-    # However, there will be a significant performance hit (especially on Windows).
-    # Hacking run.sh to copy redcap_source to the container on every run may be faster for you.
-    # volumes:
-    #   - ../redcap_source/:/var/www/html/
-    #   - ../tmp/:/var/www/html/temp:Z
-    #   - ../edocs/:/var/www/html/edocs:Z
+    volumes:
+      - ../tmp/:/var/www/html/temp:Z
+      - ../edocs/:/var/www/html/edocs:Z
+      - ./app/azure:/var/www/html/azure:Z
+      # If you need to make on the fly modifications to the redcap_source dir, uncommenting the following may be helpful.
+      # However, there will be a significant performance hit (especially on Windows).
+      # Hacking run.sh to copy redcap_source to the container on every run may be faster for you.
+      # - ../redcap_source/:/var/www/html/:Z
 
   db:
     container_name: redcap_docker-db-1
@@ -39,6 +39,60 @@ services:
   sftp:
     container_name: redcap_docker-sftp-1
     image: atmoz/sftp
+    profiles: ["sftp"]
     volumes:
-        - ../redcap_cypress/cypress/sftp_uploads:/home/sftp-user/upload
-    command: sftp-user:sftp-password
+      - ./external_storage/sftp:/home/sftp-user/upload
+    command: sftp-user:sftp-password:${UID:-}
+
+  azurite:
+    # We spoof this domain because REDCap requires azure URLs to end in blob.core.windows.net
+    container_name: devstoreaccount1.blob.core.windows.net
+    image: mcr.microsoft.com/azure-storage/azurite
+    profiles: ["external-storage"]
+    volumes:
+      - ./certs:/certs
+    depends_on:
+      - app
+    command: |
+      sh -c "
+        sleep 10 && wget -O - redcap_docker-app-1/azure/create-container.php &
+        azurite --inMemoryPersistence --blobHost 0.0.0.0 --blobPort 443 --cert /certs/devstoreaccount1.blob.core.windows.net.crt --key /certs/devstoreaccount1.blob.core.windows.net.key
+      "
+  
+  webdav:
+    container_name: redcap_docker-webdav-1
+    image: bytemark/webdav
+    profiles: ["external-storage"]
+    volumes:
+      - ./external_storage/webdav:/var/lib/dav
+    environment:
+      AUTH_TYPE: Basic
+      USERNAME: webdav-user
+      PASSWORD: webdav-pass
+
+  fake-gcs-server:
+    container_name: redcap_docker-fake-gcs-server-1
+    image: fsouza/fake-gcs-server
+    profiles: ["external-storage"]
+    volumes:
+      - ./external_storage/gcs:/storage
+    entrypoint: |
+      /bin/sh -c "
+        mkdir /storage/mybucket
+        fake-gcs-server -scheme http -port 80
+      "
+
+  minio:
+    # We use this hostname because minio doesn't support "redcap_docker-minio-1" as a hostname
+    container_name: mybucket.minio.local
+    image: minio/minio
+    profiles: ["external-storage"]
+    environment:
+      MINIO_DOMAIN: minio.local
+    entrypoint: |
+      /bin/sh -c "
+        sleep 10 && \ 
+        mc mb /data/mybucket && \
+        mc alias set local http://localhost:9000 minioadmin minioadmin &
+        minio server /data --console-address ":9001"
+      "
