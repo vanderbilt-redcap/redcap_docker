@@ -40,5 +40,9 @@ RUN chmod +x /docker-entrypoint.sh
 # Expose port 80 for Apache.
 EXPOSE 80
 
+# Mend traceability labels
+LABEL io.mend.image.dockerfile.path=main/app/Dockerfile
+LABEL org.opencontainers.image.source=https://github.com/vanderbilt-redcap/redcap_docker
+
 # Start Apache web server.
 CMD ["/docker-entrypoint.sh"]
