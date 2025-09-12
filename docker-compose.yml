@@ -16,9 +16,8 @@ services:
       # If you need to make on the fly modifications to the redcap_source dir, uncommenting the following may be helpful.
       # However, there will be a significant performance hit (especially on Windows).
       # Hacking run.sh to copy redcap_source to the container on every run may be faster for you.
-      - ../redcap_source/:/var/www/html/:Z
-      - ../project/coverage-report/:/tmp/path/coverage-report:Z
-      - ../project/coverage/:/tmp/path/coverage:Z
+      # - ../redcap_source/:/var/www/html/:Z
+
   db:
     container_name: redcap_docker-db-1
     image: mysql:8.1
