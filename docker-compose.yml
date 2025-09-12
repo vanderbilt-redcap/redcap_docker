@@ -7,7 +7,9 @@ services:
       - '8080:80'
     environment:
       PHP_EXTENSION_IMAGICK: 1
+      PHP_EXTENSION_XDEBUG: ${PHP_EXTENSION_XDEBUG}
       TEMPLATE_PHP_INI: production
+      REDCAP_VERSION: ${REDCAP_VERSION}
     depends_on:
       - db
     volumes:
