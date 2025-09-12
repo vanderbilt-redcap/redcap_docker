@@ -9,9 +9,6 @@ RUN apt-get update && \
 # Configure sSMTP to send to Mailhog
 RUN echo mailhub=mailhog:1025 >> /etc/ssmtp/ssmtp.conf
 
-# Download and install Composer
-RUN curl -Lsf https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
 # Disable thecodingmachine's default xdebug config so it doesn't override ours
 RUN sed -i 's/ echo "xdebug/ \/\/echo "xdebug/g' /usr/local/bin/generate_conf.php
 
