@@ -1,0 +1,24 @@
+diff --git a/docker-compose.yml b/docker-compose.yml
+index ae4efb2..82367c9 100644
+--- a/docker-compose.yml
++++ b/docker-compose.yml
+@@ -8,6 +8,8 @@ services:
+     environment:
+       PHP_EXTENSION_IMAGICK: 1
+       TEMPLATE_PHP_INI: production
++      PHP_EXTENSION_XDEBUG: 1
++      REDCAP_VERSION: ${REDCAP_VERSION:-} # currently only needed for xdebug in cloud builds
+     depends_on:
+       - db
+     volumes:
+@@ -16,7 +18,9 @@ services:
+       # If you need to make on the fly modifications to the redcap_source dir, uncommenting the following may be helpful.
+       # However, there will be a significant performance hit (especially on Windows).
+       # Hacking run.sh to copy redcap_source to the container on every run may be faster for you.
+-      # - ../redcap_source/:/var/www/html/:Z
++      - ../redcap_source/:/var/www/html/:Z
++      - ../project/coverage-report/:/tmp/path/coverage-report:Z
++      - ../project/coverage/:/tmp/path/coverage:Z
+ 
+   db:
+     container_name: redcap_docker-db-1
