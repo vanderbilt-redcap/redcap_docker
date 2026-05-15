@@ -2,14 +2,21 @@ services:
   app:
     platform: ${PLATFORM:-linux/x86_64}
     container_name: redcap_docker-app-1
-    build: app
+    build:
+      context: app
+      args:
+        REDCAP_APP_INTERNAL_PORT: ${REDCAP_APP_INTERNAL_PORT:-80}
     ports:
-      - '8080:80'
+      - '8080:${REDCAP_APP_INTERNAL_PORT:-80}'
     environment:
       PHP_EXTENSION_IMAGICK: 1
       TEMPLATE_PHP_INI: production
     depends_on:
       - db
+    env_file:
+      - ./env/app.env
+    expose:
+      - "${REDCAP_APP_INTERNAL_PORT:-80}"
     volumes:
       - ../edocs/:/var/www/html/edocs:Z
       - ./app/azure:/var/www/html/azure:Z
