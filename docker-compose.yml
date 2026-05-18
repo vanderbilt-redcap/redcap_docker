@@ -1,15 +1,16 @@
 services:
   app:
-    platform: linux/x86_64
     container_name: redcap_docker-app-1
     build: app
     ports:
-      - '8080:80'
+      - '8080:8080'
     environment:
       PHP_EXTENSION_IMAGICK: 1
       TEMPLATE_PHP_INI: production
     depends_on:
       - db
+    expose:
+      - "8080"
     volumes:
       - ../edocs/:/var/www/html/edocs:Z
       - ./app/azure:/var/www/html/azure:Z

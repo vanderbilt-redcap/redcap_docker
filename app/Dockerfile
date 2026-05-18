@@ -34,8 +34,11 @@ COPY ./docker-entrypoint.sh /docker-entrypoint.sh
 RUN dos2unix /docker-entrypoint.sh # Required when running on Windows with autocrlf enabled
 RUN chmod +x /docker-entrypoint.sh
 
-# Expose port 80 for Apache.
-EXPOSE 80
+# Configure Apache for non-privileged ports to accommodate rootless container managers
+# NOTE: this CANNOT be done in docker-entrypoint.sh as failures prevent running
+RUN sed -i 's/^Listen 80/Listen 8080/' /etc/apache2/ports.conf && \
+    sed -i 's/:80>/:8080>/g' /etc/apache2/sites-enabled/*.conf && \
+    sed -i 's/:80>/:8080>/g' /etc/apache2/sites-available/*.conf
 
 # Mend traceability labels
 LABEL io.mend.image.dockerfile.path=main/app/Dockerfile
