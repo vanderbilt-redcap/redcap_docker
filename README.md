@@ -16,7 +16,6 @@ Update the environment variable files located underneath /env with your preferen
 Update the docker-compose.yml file with the ports you plan on using (if non-standard).
 
 When you are ready, installation is as easy as:
-```
-$ docker-compose build
-$ docker-compose up
+```bash
+docker-compose build && docker-compose up -d
 ```
