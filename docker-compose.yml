@@ -1,7 +1,5 @@
 services:
   app:
-    # NOTE: platform is set in redcap_cypress_docker's update.sh and run.sh scripts
-    platform: ${PLATFORM:-linux/x86_64}
     container_name: redcap_docker-app-1
     build: app
     ports:
