@@ -84,7 +84,7 @@ services:
   minio:
     # We use this hostname because minio doesn't support "redcap_docker-minio-1" as a hostname
     container_name: mybucket.minio.local
-    image: minio/minio
+    image: quay.io/minio/minio
     profiles: ["external-storage"]
     environment:
       MINIO_DOMAIN: minio.local
